@@ -31,8 +31,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
       // Animate the title independently
       gsap.to(title, {
-        x: -25,
-        duration: 0.7,
+        x: 25,
+        duration: 0.5,
         opacity: 1,
         ease: 'power3.out',
       })
@@ -45,6 +45,42 @@ document.addEventListener('DOMContentLoaded', function () {
         duration: 0.5,
         ease: 'power3.out',
       })
+    })
+  })
+})
+
+document.addEventListener('DOMContentLoaded', function () {
+  // Select all elements with the class 'blog_card_wrap'
+  const blogCards = document.querySelectorAll('.blog_card_wrap')
+
+  blogCards.forEach(function (blogCard) {
+    // Define GSAP animation for each card
+    const hoverAnimation = gsap.to(blogCard, {
+      duration: 0.3,
+      borderColor: 'pink',
+      borderWidth: 1.2,
+      paused: true, // Animation paused initially
+    })
+
+    // Define GSAP animation for rotating the icon
+    const iconAnimation = gsap.to(
+      blogCard.querySelectorAll('.g_link-title_icon'),
+      {
+        duration: 0.3,
+        rotation: 45, // Rotate 45 degrees
+        paused: true, // Animation paused initially
+      }
+    )
+
+    // Trigger animations on hover for each card
+    blogCard.addEventListener('mouseenter', function () {
+      hoverAnimation.play()
+      iconAnimation.play() // Play icon rotation animation
+    })
+
+    blogCard.addEventListener('mouseleave', function () {
+      hoverAnimation.reverse() // Reverse card animation on mouse leave
+      iconAnimation.reverse() // Reverse icon rotation animation on mouse leave
     })
   })
 })
