@@ -84,3 +84,122 @@ document.addEventListener('DOMContentLoaded', function () {
     })
   })
 })
+
+document.addEventListener('DOMContentLoaded', function () {
+  const contactMessage = document.getElementById('nav_contact_message')
+  const contactButton = document.getElementById('nav_contact')
+  const emailAddress = document.getElementById('email_address')
+
+  if (contactMessage && emailAddress) {
+    console.log(contactMessage)
+
+    const timeline = gsap.timeline({ paused: true })
+    timeline.to(contactMessage, {
+      opacity: 1,
+      duration: 1,
+      ease: 'power3.out',
+      display: 'block',
+    })
+    timeline.to(contactMessage, {
+      delay: 2,
+      opacity: 0,
+      duration: 2,
+      ease: 'power1.out',
+      display: 'none',
+    })
+
+    contactButton.addEventListener('click', function () {
+      timeline.restart()
+      // Copy email address to clipboard
+      navigator.clipboard
+        .writeText(emailAddress.innerText)
+        .then(() => {
+          console.log('Email address copied to clipboard')
+        })
+        .catch((error) => {
+          console.error('Unable to copy email address to clipboard:', error)
+        })
+    })
+  } else {
+    console.error(
+      "Element with class 'nav_contact_message' or 'email_address' not found."
+    )
+  }
+})
+
+document.addEventListener('DOMContentLoaded', function () {
+  const footerText = document.querySelector('.footer_text')
+
+  if (footerText) {
+    const currentYear = new Date().getFullYear()
+    footerText.innerText =
+      'Designed & Developed by Circa9 Studio © ' + currentYear.toString()
+  } else {
+    console.error("Element with class 'footer_text' not found.")
+  }
+})
+
+document.addEventListener('DOMContentLoaded', function () {
+  const NavLinkID = document.getElementById('nav_link_id')
+
+  // Add event listener for mouseover
+  NavLinkID.addEventListener('mouseover', function () {
+    // Apply color change with fade effect
+    NavLinkID.style.transition = 'color 0.21s'
+    NavLinkID.style.color = '#4f38ff'
+  })
+
+  // Add event listener for mouseout
+  NavLinkID.addEventListener('mouseout', function () {
+    // Reset color back to white with fade effect
+    NavLinkID.style.transition = 'color 0.3s'
+    NavLinkID.style.color = 'white'
+  })
+
+  const recentProjectImage = document.querySelector(
+    '.hero_recent-project_image'
+  )
+  recentProjectImage.style.transition = 'transform 0.3s' // Add transition for scaling
+
+  recentProjectImage.addEventListener('mouseover', function () {
+    recentProjectImage.style.transform = 'scale(1.07)'
+  })
+
+  recentProjectImage.addEventListener('mouseout', function () {
+    recentProjectImage.style.transform = 'scale(1)' // Reset scale on mouseout
+  })
+})
+
+document.addEventListener('DOMContentLoaded', function () {
+  // DOM elements
+  const circleContainer = document.querySelector('.circle-container')
+
+  const tl = gsap.timeline({ paused: true })
+
+  tl.from('.circle-container', {
+    // Get all items inside the .circle-container eg icon-1, 2, ect
+    duration: 1,
+    color: 'red', // animate x using percent
+    ease: 'power1.out',
+  })
+
+  // Start entering animation on mouseenter
+  circleContainer.addEventListener('mouseenter', () => {
+    console.log(circleContainer)
+    tl.restart() // restart the timline
+  })
+
+  // Reset position on mouseleave
+  circleContainer.addEventListener('mouseleave', () => {
+    tl.restart() // restart the same timeline
+  })
+})
+
+// Learn more button click to scroll to blog
+
+document.querySelector('.btn_main_wrap').addEventListener('click', function () {
+  // Scroll to the target element smoothly
+  document.querySelector('.blog_wrap').scrollIntoView({
+    behavior: 'smooth',
+  })
+})
