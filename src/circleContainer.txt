@@ -1,0 +1,10 @@
+  const circleContainer = document.querySelector('.circle-container')
+
+  const tl = gsap.timeline({ paused: true })
+
+  tl.from('.circle-container', {
+    // Get all items inside the .circle-container eg icon-1, 2, ect
+    duration: 1,
+    color: 'red', // animate x using percent
+    ease: 'power1.out',
+  })
