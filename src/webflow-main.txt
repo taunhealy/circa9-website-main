@@ -1,9 +1,7 @@
+<script>
+
 /* eslint-disable no-unused-vars */
 console.log('JavaScript file is being read.')
-/* eslint-disable prettier/prettier */
-/* eslint-disable no-undef */
-import './styles.css'
-import gsap from 'gsap'
 
 document.addEventListener('DOMContentLoaded', function () {
   const mainTitles = document.querySelectorAll('.main_left_titles_item')
@@ -135,7 +133,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
   if (footerText) {
     const currentYear = new Date().getFullYear()
-    footerText.innerText = 'Circa9 Studio © ' + currentYear.toString()
+    footerText.innerText =
+      'Designed & Developed by Circa9 Studio © ' + currentYear.toString()
   } else {
     console.error("Element with class 'footer_text' not found.")
   }
@@ -200,3 +199,6 @@ document.addEventListener('DOMContentLoaded', function () {
     })
   })
 })
+
+
+</script>
