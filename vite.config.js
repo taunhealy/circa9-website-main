@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [eslintPlugin({ cache: false })],
   server: {
     host: 'localhost',
-    cors: '*',
+    cors: true, // Allow CORS
     hmr: {
       host: 'localhost',
       protocol: 'ws',
@@ -16,7 +16,7 @@ export default defineConfig({
     minify: true,
     manifest: true,
     rollupOptions: {
-      input: './src/main.js',
+      input: './src/main.js', // Ensure this path is correct
       output: {
         format: 'umd',
         entryFileNames: 'main.js',
@@ -26,7 +26,7 @@ export default defineConfig({
           jquery: '$',
         },
       },
-      external: ['jquery'],
+      external: ['jquery'], // Ensure this matches your project requirements
     },
   },
 })
