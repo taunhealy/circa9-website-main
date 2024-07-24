@@ -201,4 +201,3 @@ document.addEventListener('DOMContentLoaded', function () {
   })
 })
 
-// Card hover CSS glow effect
