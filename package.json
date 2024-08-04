@@ -27,6 +27,7 @@
     "barba": "^1.0.0",
     "gsap": "^3.12.5",
     "locomotive-scroll": "^4.1.4",
-    "split-type": "^0.3.4"
+    "split-type": "^0.3.4",
+    "three": "^0.167.1"
   }
 }

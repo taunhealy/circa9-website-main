@@ -1,0 +1,352 @@
+/* eslint-disable no-unused-vars */
+console.log('JavaScript file is being read.')
+/* eslint-disable prettier/prettier */
+/* eslint-disable no-undef */
+
+document.addEventListener('DOMContentLoaded', function () {
+  const mainTitles = document.querySelectorAll('.main_left_titles_item')
+
+  mainTitles.forEach((title) => {
+    const mainImage = title.querySelector('.main_image')
+    const isTheme = title.classList.contains('is-theme')
+    const themeImage = document.querySelector('.main_projects_theme_image')
+    let imageTimeline = gsap.timeline({ paused: true })
+
+    console.log('Processing title:', title, 'isTheme:', isTheme)
+
+    if (isTheme) {
+      // Animation for theme items
+      imageTimeline
+        .to(themeImage, {
+          duration: 0.5,
+          borderWidth: '2px',
+          borderStyle: 'solid',
+          borderColor: '#4f38ff',
+          ease: 'power2.out',
+        })
+        .to(
+          themeImage,
+          {
+            duration: 2,
+            backgroundImage:
+              'linear-gradient(90deg, #4f38ff 50%, transparent 50%)',
+            backgroundSize: '300% 100%',
+            backgroundPosition: '100% 0',
+            ease: 'none',
+            repeat: -1,
+          },
+          0
+        )
+    } else {
+      // Existing trampoline effect for custom items
+      imageTimeline.to(mainImage, {
+        duration: 0.5,
+        x: 45,
+        display: 'block',
+        height: '100%',
+        marginLeft: '35%',
+        scale: '2',
+        onComplete: function () {
+          imageTimeline.reverse()
+        },
+      })
+    }
+
+    title.addEventListener('mouseover', function () {
+      console.log('Mouseover:', title, 'isTheme:', isTheme)
+      imageTimeline.play()
+
+      if (!isTheme) {
+        gsap.to(title, {
+          x: 25,
+          duration: 0.5,
+          opacity: 1,
+          ease: 'power3.out',
+        })
+      }
+    })
+
+    title.addEventListener('mouseout', function () {
+      console.log('Mouseout:', title, 'isTheme:', isTheme)
+      if (isTheme) {
+        imageTimeline.reverse()
+      } else {
+        imageTimeline.reverse()
+        gsap.to(title, {
+          x: 0,
+          duration: 0.5,
+          ease: 'power3.out',
+        })
+      }
+    })
+  })
+})
+
+document.addEventListener('DOMContentLoaded', function () {
+  // Select all elements with the class 'blog_card_wrap'
+  const blogCards = document.querySelectorAll('.blog_card_wrap')
+
+  blogCards.forEach(function (blogCard) {
+    // Define GSAP animation for each card
+    const hoverAnimation = gsap.to(blogCard, {
+      duration: 0.3,
+      borderColor: 'pink',
+      borderWidth: 1.2,
+      paused: true, // Animation paused initially
+    })
+
+    // Define GSAP animation for rotating the icon
+    const iconAnimation = gsap.to(
+      blogCard.querySelectorAll('.g_link-title_icon'),
+      {
+        duration: 0.3,
+        rotation: 45, // Rotate 45 degrees
+        paused: true, // Animation paused initially
+      }
+    )
+
+    // Trigger animations on hover for each card
+    blogCard.addEventListener('mouseenter', function () {
+      hoverAnimation.play()
+      iconAnimation.play() // Play icon rotation animation
+    })
+
+    blogCard.addEventListener('mouseleave', function () {
+      hoverAnimation.reverse() // Reverse card animation on mouse leave
+      iconAnimation.reverse() // Reverse icon rotation animation on mouse leave
+    })
+  })
+})
+
+document.addEventListener('DOMContentLoaded', function () {
+  const contactMessage = document.getElementById('nav_contact_message')
+  const contactButton = document.getElementById('nav_contact')
+  const emailAddress = document.getElementById('email_address')
+  const homeImage = document.getElementById('home_image')
+
+  const timeline = gsap.timeline({ paused: true })
+  timeline.to(contactMessage, {
+    opacity: 1,
+    duration: 0.72,
+    ease: 'power3.out',
+    display: 'block',
+  })
+  timeline.to(homeImage, {
+    opacity: 0,
+    duration: 3,
+    ease: 'power3.out',
+  })
+  timeline.to(homeImage, {
+    opacity: 1,
+    duration: 1,
+    ease: 'power1.out',
+  })
+  timeline.to(contactMessage, {
+    delay: 2,
+    opacity: 0,
+    duration: 2,
+    ease: 'power1.out',
+    display: 'none',
+  })
+
+  contactButton.addEventListener('click', function () {
+    timeline.restart()
+    // Copy email address to clipboard
+    navigator.clipboard
+      .writeText(emailAddress.innerText)
+      .then(() => {
+        console.log('Email address copied to clipboard - test')
+      })
+      .catch((error) => {
+        console.error('Unable to copy email address to clipboard:', error)
+      })
+  })
+})
+
+document.addEventListener('DOMContentLoaded', function () {
+  const footerText = document.querySelector('.footer_text')
+
+  if (footerText) {
+    const currentYear = new Date().getFullYear()
+    footerText.innerText = 'Circa9 Studio © ' + currentYear.toString()
+  } else {
+    console.error("Element with class 'footer_text' not found.")
+  }
+})
+
+document.addEventListener('DOMContentLoaded', function () {
+  const NavLinkIDs = document.querySelectorAll('#nav_link_id')
+
+  NavLinkIDs.forEach(function (NavLinkID) {
+    // Add event listener for mouseover
+    NavLinkID.addEventListener('mouseover', function () {
+      // Apply color change with fade effect
+      NavLinkID.style.transition = 'color 0.21s'
+      NavLinkID.style.color = '#4f38ff'
+    })
+
+    // Add event listener for mouseout
+    NavLinkID.addEventListener('mouseout', function () {
+      // Reset color back to white with fade effect
+      NavLinkID.style.transition = 'color 0.3s'
+      NavLinkID.style.color = 'white'
+    })
+  })
+
+  const recentProjectImage = document.querySelector(
+    '.hero_recent-project_image'
+  )
+  recentProjectImage.style.transition = 'transform 0.3s' // Add transition for scaling
+
+  recentProjectImage.addEventListener('mouseover', function () {
+    recentProjectImage.style.transform = 'scale(1.07)'
+  })
+
+  recentProjectImage.addEventListener('mouseout', function () {
+    recentProjectImage.style.transform = 'scale(1)' // Reset scale on mouseout
+  })
+})
+
+document.addEventListener('DOMContentLoaded', function () {
+  // Learn more button click to scroll to blog
+
+  document
+    .querySelector('.btn_main_wrap')
+    .addEventListener('click', function () {
+      // Scroll to the target element smoothly
+      document.querySelector('.blog_wrap').scrollIntoView({
+        behavior: 'smooth',
+      })
+    })
+
+  document.querySelector('#nav_blog').addEventListener('click', function () {
+    //scroll to the target element smoothly
+    document.querySelector('.blog_wrap').scrollIntoView({
+      behavior: 'smooth',
+    })
+  })
+
+  document.querySelector('#nav_work').addEventListener('click', function () {
+    //scroll to the target element smoothly
+    document.querySelector('#work_wrap').scrollIntoView({
+      behavior: 'smooth',
+    })
+  })
+})
+
+document.addEventListener('DOMContentLoaded', function () {
+  const themeTab = document.querySelector('.hero_tab_container.is-themes')
+  const customTab = document.querySelector('.hero_tab_container.is-custom')
+  const themeProjects = document.querySelector('.main_projects.is-themes')
+  const customProjects = document.querySelector('.main_projects.is-custom')
+  const themeHeading = document.querySelector('.main_heading_h3.is-themes')
+  const customHeading = document.querySelector('.main_heading_h3.is-custom')
+
+  // Check if all elements are found
+  const elements = {
+    themeTab,
+    customTab,
+    themeProjects,
+    customProjects,
+    themeHeading,
+    customHeading,
+  }
+  for (const [name, element] of Object.entries(elements)) {
+    if (!element) {
+      console.error(`Element not found: ${name}`)
+    }
+  }
+
+  function showProjects(
+    projectsToShow,
+    projectsToHide,
+    activeTab,
+    inactiveTab,
+    activeHeading,
+    inactiveHeading
+  ) {
+    if (
+      !projectsToShow ||
+      !projectsToHide ||
+      !activeTab ||
+      !inactiveTab ||
+      !activeHeading ||
+      !inactiveHeading
+    ) {
+      console.error('One or more elements are missing:', {
+        projectsToShow,
+        projectsToHide,
+        activeTab,
+        inactiveTab,
+        activeHeading,
+        inactiveHeading,
+      })
+      return
+    }
+
+    gsap.to(projectsToHide, {
+      opacity: 0,
+      duration: 0.3,
+      onComplete: function () {
+        projectsToHide.style.display = 'none'
+        projectsToShow.style.display = 'block'
+        gsap.to(projectsToShow, { opacity: 1, duration: 0.3 })
+
+        // Update active states
+        activeTab.classList.add('active')
+        inactiveTab.classList.remove('active')
+
+        // Change active heading color to brand secondary
+        activeHeading.style.color = '#4838ff'
+        inactiveHeading.style.color = '' // Reset to default color
+
+        console.log('Active heading color changed to brand second')
+      },
+    })
+  }
+
+  if (themeTab && customTab) {
+    themeTab.addEventListener('click', function () {
+      console.log('Theme tab clicked')
+      showProjects(
+        themeProjects,
+        customProjects,
+        themeTab,
+        customTab,
+        themeHeading,
+        customHeading
+      )
+    })
+
+    customTab.addEventListener('click', function () {
+      console.log('Custom tab clicked')
+      showProjects(
+        customProjects,
+        themeProjects,
+        customTab,
+        themeTab,
+        customHeading,
+        themeHeading
+      )
+    })
+  }
+
+  // Show theme projects by default and set initial active state
+  if (
+    customProjects &&
+    themeProjects &&
+    themeTab &&
+    themeHeading &&
+    customHeading
+  ) {
+    customProjects.style.display = 'none'
+    themeProjects.style.display = 'block'
+    themeTab.classList.add('active')
+    themeHeading.style.color = '#4838ff'
+    customHeading.style.color = '' // Ensure custom heading is set to default color
+
+    console.log('Initial setup complete')
+  } else {
+    console.error('Unable to set initial state due to missing elements')
+  }
+})

@@ -1,0 +1,162 @@
+/* ... existing styles ... */
+:root {
+  --brand-secondary: #2800dc !important;
+}
+
+.main_heading_h3.is-themes,
+.main_heading_h3.is-custom {
+  transition: color 0.3s ease;
+}
+
+.projects_image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+}
+
+.main_left_titles_item .main_text {
+  position: relative;
+  z-index: 2;
+  transition: all 0.5s ease;
+}
+
+.main_left_titles_item:hover .main_text {
+  background-color: #2800dc;
+  color: white;
+  padding-left: 32px;
+  padding-right: 8px;
+}
+
+/* Hide the original main_image */
+.main_image.is-themes,
+.main_image.is-custom {
+  display: none;
+}
+
+.footer-animation-active .main_projects_vanta,
+.footer-animation-active .projects_image {
+  opacity: 1;
+}
+
+.work_content_container {
+  display: flex;
+  height: 100%;
+}
+
+.main_container_left {
+  flex: 1;
+}
+
+#fixed-image-container {
+  position: absolute !important; /* Change to absolute positioning */
+  bottom: 30% !important; /* Position from the bottom */
+  top: 15% !important;
+  left: 80% !important;
+  transform: translateX(-50%) !important; /* Center horizontally */
+  width: 100 !important;
+  height: 100% !important; /* Adjust as needed */
+  overflow: visible !important;
+
+  background-color: transparent !important; /* For visibility */
+  max-width: 50vw !important;
+  min-width: 25vw !important;
+  box-sizing: border-box !important;
+  z-index: 10 !important; /* Ensure it's above other content */
+}
+.projects_image {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 70% !important;
+  height: 70% !important;
+  background-size: cover !important;
+  background-position: center !important;
+  opacity: 0;
+}
+
+.blog_card_wrap {
+  position: relative;
+  overflow: visible !important;
+}
+
+.blog_card_wrap canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100% !important;
+  height: 100% !important;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.gradient-border {
+  position: relative;
+  background: #000; /* Adjust this to match your card's background color */
+  padding: 1px; /* This creates space for the border */
+  border-radius: 9px; /* Adjust as needed */
+  box-shadow: 0 0 1px rgba(63, 94, 251, 0.5); /* Outer glow */
+  transition: box-shadow 0.3s ease;
+}
+
+.gradient-border::before,
+.gradient-border::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #3f5efb, #6f00ff, #4169e1, #8a2be2);
+  border-radius: 10px; /* Slightly larger than the card's border-radius */
+  z-index: -1;
+  animation: animateGradient 6s linear infinite;
+  background-size: 300% 300%;
+  transition: opacity 0.3s ease, filter 0.3s ease;
+}
+
+.gradient-border::before {
+  filter: blur(1px); /* Creates the neon effect */
+  opacity: 0.8; /* Adjust for desired intensity */
+}
+
+.gradient-border::after {
+  filter: blur(5px); /* Creates an additional glow layer */
+  opacity: 0.4; /* Adjust for desired intensity */
+}
+
+.gradient-border:hover {
+  box-shadow: 0 0 50px rgba(63, 94, 251, 0.8); /* Increased outer glow on hover */
+}
+
+.gradient-border:hover::before {
+  opacity: 0.1;
+  filter: blur(2px);
+}
+
+.gradient-border:hover::after {
+  opacity: 1;
+  filter: blur(7px);
+}
+
+.gradient-border-wrapper {
+  background: #000; /* Adjust this to match your card's background color */
+  padding: 20px; /* Adjust as needed */
+  border-radius: 8px; /* Slightly smaller than the card's border-radius */
+}
+
+@keyframes animateGradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
