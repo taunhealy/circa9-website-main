@@ -350,27 +350,6 @@ function createParticles() {
   return new THREE.Points(geometry, material)
 }
 
-function initBlogCardEffects() {
-  const blogCards = document.querySelectorAll('.blog_card_wrap')
-  blogCards.forEach((card) => {
-    addGradientBorder(card)
-  })
-}
-
-function addGradientBorder(card) {
-  // Create a wrapper div for the gradient border
-  const wrapper = document.createElement('div')
-  wrapper.className = 'gradient-border-wrapper'
-
-  // Move the card's contents into the wrapper
-  wrapper.innerHTML = card.innerHTML
-  card.innerHTML = ''
-  card.appendChild(wrapper)
-
-  // Add the gradient border class to the card
-  card.classList.add('gradient-border')
-}
-
 // Hover Animations for Projects
 function setupHoverAnimations() {
   const items = document.querySelectorAll('.main_left_titles_item')
