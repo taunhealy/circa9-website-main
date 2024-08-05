@@ -1,14 +1,5 @@
 /* eslint-disable no-unused-vars */
-(function() {
-  const originalConsoleLog = console.log;
-  let hasLogged = false;
-  console.log = function() {
-    if (!hasLogged) {
-      originalConsoleLog.call(console, 'Designed & Developed by Circa9');
-      hasLogged = true;
-    }
-  };
-})();
+
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-undef */
 
@@ -19,6 +10,17 @@ import * as THREE from 'three'
 import { mergeVertices } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
 
 gsap.registerPlugin(ScrollTrigger)
+
+document.addEventListener('DOMContentLoaded', function () {
+  const originalConsoleLog = console.log
+  let hasLogged = false
+  console.log = function () {
+    if (!hasLogged) {
+      originalConsoleLog.call(console, 'Designed & Developed by Circa9')
+      hasLogged = true
+    }
+  }
+})
 
 document.addEventListener('DOMContentLoaded', function () {
   const footerScroll = document.querySelector('.footer_scroll')
@@ -154,7 +156,8 @@ function initHeroTopologyEffect() {
   const cgContainer = document.querySelector('.cg_container')
   if (!cgContainer) return
 
-  if (typeof VANTA === 'undefined' || typeof VANTA.TOPOLOGY !== 'function') return
+  if (typeof VANTA === 'undefined' || typeof VANTA.TOPOLOGY !== 'function')
+    return
 
   window.addEventListener('load', () => {
     setTimeout(() => {
@@ -227,7 +230,7 @@ function initInteractiveParticles() {
 
   // Add hover event listeners to all cards
   const cards = document.querySelectorAll('.blog_card_wrap')
-  cards.forEach(card => {
+  cards.forEach((card) => {
     card.addEventListener('mouseenter', () => {
       isHovering = true
       gsap.to(fxContainer, { opacity: 1, duration: 0.5 })
