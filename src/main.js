@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-console.log('JavaScript file is being read.')
+console.log('  HELLO')
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-undef */
 
@@ -9,16 +9,27 @@ import './styles.css'
 import * as THREE from 'three'
 import { mergeVertices } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
 
-console.log('main.js is loading')
-
 gsap.registerPlugin(ScrollTrigger)
 
-console.log('main.js is loading')
+document.addEventListener('DOMContentLoaded', function () {
+  console.log('Setting up scroll to top functionality')
+  const footerScroll = document.querySelector('.footer_scroll')
+  console.log('footerScroll element:', footerScroll)
 
-console.log(
-  'VANTA object:',
-  typeof VANTA !== 'undefined' ? VANTA : 'VANTA not found'
-)
+  if (footerScroll) {
+    console.log('Adding click event listener to footerScroll')
+    footerScroll.addEventListener('click', (e) => {
+      console.log('footerScroll clicked')
+      e.preventDefault()
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      })
+    })
+  } else {
+    console.error('.footer_scroll element not found')
+  }
+})
 
 document.addEventListener('DOMContentLoaded', function () {
   console.log('DOM content loaded')
@@ -43,6 +54,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Add fade-in and stagger animations
   fadeInWebsite()
+
+  // Add scroll to top functionality
+  setupScrollToTop()
 
   // Filtering functionality
   const customButton = document.getElementById('button-custom')
@@ -161,28 +175,34 @@ function initHeroTopologyEffect() {
     return
   }
 
-  try {
-    window.vantaEffect = VANTA.TOPOLOGY({
-      el: cgContainer,
-      mouseControls: false,
-      touchControls: false,
-      gyroControls: false,
-      minHeight: 200.0,
-      minWidth: 200.0,
-      scale: 1.0,
-      scaleMobile: 1.0,
-      color: 0x4838ff,
-      backgroundColor: 0x0,
-      points: 12,
-      maxDistance: 20.0,
-      spacing: 15.0,
-      THREE: THREE, // Explicitly pass THREE
-      speed: 1.5,
-    })
-    console.log('Vanta effect initialized successfully')
-  } catch (error) {
-    console.error('Error initializing Hero Topology Effect:', error)
-  }
+  // Wait for the window to load completely
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      try {
+        window.vantaEffect = VANTA.TOPOLOGY({
+          el: cgContainer,
+          mouseControls: false,
+          touchControls: false,
+          gyroControls: false,
+          minHeight: 200.0,
+          minWidth: 200.0,
+          scale: 1.0,
+          scaleMobile: 1.0,
+          color: 0x4838ff,
+          backgroundColor: 0x0,
+          points: 10,
+          maxDistance: 20.0,
+          spacing: 15.0,
+          showDots: false,
+        })
+        console.log('Vanta effect initialized successfully')
+      } catch (error) {
+        console.error('Error initializing Hero Topology Effect:', error)
+        // Fallback to a simple background color if the effect fails
+        cgContainer.style.backgroundColor = '#000'
+      }
+    }, 1000) // Increased delay to 1000ms
+  })
 }
 
 function initInteractiveParticles() {
@@ -352,53 +372,52 @@ function addGradientBorder(card) {
 
 function setupHoverAnimations() {
   const items = document.querySelectorAll('.main_left_titles_item')
-  const projectsImage = document.querySelector('.projects_image')
+  const projectsContainer = document.querySelector('.projects_container') // Adjust this selector if needed
 
-  if (!projectsImage) {
-    console.error('projects_image element not found')
+  // Create a new element for displaying the hovered image
+  const hoverImage = document.createElement('div')
+  hoverImage.className = 'projects_hover_image'
+  hoverImage.style.position = 'absolute'
+  hoverImage.style.top = '0'
+  hoverImage.style.right = '0'
+  hoverImage.style.width = '50%' // Adjust as needed
+  hoverImage.style.height = '100%'
+  hoverImage.style.backgroundSize = 'cover'
+  hoverImage.style.backgroundPosition = 'center'
+  hoverImage.style.opacity = '0'
+  hoverImage.style.transition = 'opacity 0.3s ease'
+
+  if (projectsContainer) {
+    projectsContainer.style.position = 'relative'
+    projectsContainer.appendChild(hoverImage)
+  } else {
+    console.error('.projects_container element not found')
     return
+  }
+
+  function hoverIn(mainImage) {
+    hoverImage.style.backgroundImage = `url("${mainImage.src}")`
+    gsap.to(hoverImage, {
+      duration: 0.7,
+      opacity: 1,
+      ease: 'power2.out',
+    })
+  }
+
+  function hoverOut() {
+    gsap.to(hoverImage, {
+      duration: 0.3,
+      opacity: 0,
+      ease: 'power2.in',
+    })
   }
 
   items.forEach((item) => {
     const mainImage = item.querySelector('img')
-
-    if (!mainImage) {
-      return
+    if (mainImage) {
+      item.addEventListener('mouseenter', () => hoverIn(mainImage))
+      item.addEventListener('mouseleave', hoverOut)
     }
-
-    function hoverIn() {
-      gsap.killTweensOf(projectsImage)
-
-      projectsImage.style.backgroundImage = `url("${mainImage.src}")`
-
-      gsap.fromTo(
-        projectsImage,
-        {
-          opacity: 0,
-          x: -100,
-          scale: 1,
-        },
-        {
-          duration: 0.7,
-          opacity: 1,
-          x: 0,
-          scale: 1,
-          ease: 'power2.out',
-        }
-      )
-    }
-
-    function hoverOut() {
-      gsap.killTweensOf(projectsImage)
-      gsap.to(projectsImage, {
-        duration: 0.3,
-        opacity: 0,
-        ease: 'power2.in',
-      })
-    }
-
-    item.addEventListener('mouseenter', hoverIn)
-    item.addEventListener('mouseleave', hoverOut)
   })
 }
 
@@ -415,6 +434,25 @@ function fadeInWebsite() {
     })
   } else {
     console.error('.page_main element not found')
+  }
+}
+
+function setupScrollToTop() {
+  const footerScroll = document.querySelector('.footer_scroll')
+  console.log('footerScroll element:', footerScroll)
+
+  if (footerScroll) {
+    console.log('Adding click event listener to footerScroll')
+    footerScroll.addEventListener('click', (e) => {
+      console.log('footerScroll clicked')
+      e.preventDefault()
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      })
+    })
+  } else {
+    console.error('.footer_scroll element not found')
   }
 }
 
