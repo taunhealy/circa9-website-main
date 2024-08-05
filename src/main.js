@@ -372,53 +372,48 @@ function addGradientBorder(card) {
 
 function setupHoverAnimations() {
   const items = document.querySelectorAll('.main_left_titles_item')
-  const projectsContainer = document.querySelector('.projects_container') // Adjust this selector if needed
+  const projectsImage = document.querySelector('.projects_image')
 
-  // Create a new element for displaying the hovered image
-  const hoverImage = document.createElement('div')
-  hoverImage.className = 'projects_hover_image'
-  hoverImage.style.position = 'absolute'
-  hoverImage.style.top = '0'
-  hoverImage.style.right = '0'
-  hoverImage.style.width = '50%' // Adjust as needed
-  hoverImage.style.height = '100%'
-  hoverImage.style.backgroundSize = 'cover'
-  hoverImage.style.backgroundPosition = 'center'
-  hoverImage.style.opacity = '0'
-  hoverImage.style.transition = 'opacity 0.3s ease'
-
-  if (projectsContainer) {
-    projectsContainer.style.position = 'relative'
-    projectsContainer.appendChild(hoverImage)
-  } else {
-    console.error('.projects_container element not found')
-    return
-  }
+  console.log('Projects image element:', projectsImage) // Add this line for debugging
 
   function hoverIn(mainImage) {
-    hoverImage.style.backgroundImage = `url("${mainImage.src}")`
-    gsap.to(hoverImage, {
-      duration: 0.7,
-      opacity: 1,
-      ease: 'power2.out',
-    })
+    if (!projectsImage) {
+      console.error('projectsImage element not found')
+      return
+    }
+    gsap.killTweensOf(projectsImage)
+    projectsImage.style.backgroundImage = `url("${mainImage.src}")`
+    gsap.fromTo(
+      projectsImage,
+      { opacity: 0, x: -100, scale: 1 },
+      { duration: 0.7, opacity: 1, x: 0, scale: 1, ease: 'power2.out' }
+    )
   }
 
   function hoverOut() {
-    gsap.to(hoverImage, {
+    if (!projectsImage) {
+      console.error('projectsImage element not found')
+      return
+    }
+    gsap.killTweensOf(projectsImage)
+    gsap.to(projectsImage, {
       duration: 0.3,
       opacity: 0,
       ease: 'power2.in',
     })
   }
 
-  items.forEach((item) => {
-    const mainImage = item.querySelector('img')
-    if (mainImage) {
-      item.addEventListener('mouseenter', () => hoverIn(mainImage))
-      item.addEventListener('mouseleave', hoverOut)
-    }
-  })
+  if (projectsImage) {
+    items.forEach((item) => {
+      const mainImage = item.querySelector('img')
+      if (mainImage) {
+        item.addEventListener('mouseenter', () => hoverIn(mainImage))
+        item.addEventListener('mouseleave', hoverOut)
+      }
+    })
+  } else {
+    console.error('.projects_image element not found')
+  }
 }
 
 // Make sure to call the function after it's defined
