@@ -153,8 +153,6 @@ document.addEventListener('DOMContentLoaded', function () {
   // Set the CSS variable
   document.documentElement.style.setProperty('--brand-secondary', '#2800dc')
 
-  console.log('main.js has finished loading')
-
   // Add smooth scrolling for navigation links
   setupSmoothScrolling()
 })
