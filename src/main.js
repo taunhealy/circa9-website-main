@@ -1,5 +1,14 @@
 /* eslint-disable no-unused-vars */
-console.log('  HELLO')
+(function() {
+  const originalConsoleLog = console.log;
+  let hasLogged = false;
+  console.log = function() {
+    if (!hasLogged) {
+      originalConsoleLog.call(console, 'Designed & Developed by Circa9');
+      hasLogged = true;
+    }
+  };
+})();
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-undef */
 
@@ -12,38 +21,20 @@ import { mergeVertices } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
 gsap.registerPlugin(ScrollTrigger)
 
 document.addEventListener('DOMContentLoaded', function () {
-  console.log('Setting up scroll to top functionality')
   const footerScroll = document.querySelector('.footer_scroll')
-  console.log('footerScroll element:', footerScroll)
 
   if (footerScroll) {
-    console.log('Adding click event listener to footerScroll')
     footerScroll.addEventListener('click', (e) => {
-      console.log('footerScroll clicked')
       e.preventDefault()
       window.scrollTo({
         top: 0,
         behavior: 'smooth',
       })
     })
-  } else {
-    console.error('.footer_scroll element not found')
   }
 })
 
 document.addEventListener('DOMContentLoaded', function () {
-  console.log('DOM content loaded')
-
-  console.log(
-    'VANTA object after DOM load:',
-    typeof VANTA !== 'undefined' ? VANTA : 'VANTA not found'
-  )
-
-  console.log(
-    'VANTA.TOPOLOGY:',
-    typeof VANTA !== 'undefined' && VANTA.TOPOLOGY ? 'exists' : 'does not exist'
-  )
-
   // Initialize Vanta effect
   initHeroTopologyEffect()
 
@@ -161,19 +152,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function initHeroTopologyEffect() {
   const cgContainer = document.querySelector('.cg_container')
-  if (!cgContainer) {
-    console.error('cg_container element not found')
-    return
-  }
+  if (!cgContainer) return
 
-  if (typeof VANTA === 'undefined' || typeof VANTA.TOPOLOGY !== 'function') {
-    console.error(
-      'VANTA.TOPOLOGY is not a function. Make sure the script is loaded correctly.'
-    )
-    return
-  }
+  if (typeof VANTA === 'undefined' || typeof VANTA.TOPOLOGY !== 'function') return
 
-  // Wait for the window to load completely
   window.addEventListener('load', () => {
     setTimeout(() => {
       try {
@@ -193,23 +175,16 @@ function initHeroTopologyEffect() {
           spacing: 15.0,
           showDots: false,
         })
-        console.log('Vanta effect initialized successfully')
       } catch (error) {
-        console.error('Error initializing Hero Topology Effect:', error)
-        // Fallback to a simple background color if the effect fails
         cgContainer.style.backgroundColor = '#000'
       }
-    }, 1000) // Increased delay to 1000ms
+    }, 1000)
   })
 }
 
 function initInteractiveParticles() {
-  console.log('Initializing Interactive Particles Effect')
   const fxContainer = document.querySelector('.fx_container')
-  if (!fxContainer) {
-    console.error('fx_container element not found')
-    return
-  }
+  if (!fxContainer) return
 
   const { scene, camera, renderer, particles, raycaster, pointer } =
     initThreeScene(fxContainer)
@@ -369,10 +344,7 @@ function createParticles() {
 
 function initBlogCardEffects() {
   const blogCards = document.querySelectorAll('.blog_card_wrap')
-  console.log(`Found ${blogCards.length} blog cards`)
-
-  blogCards.forEach((card, index) => {
-    console.log(`Initializing card ${index + 1}`)
+  blogCards.forEach((card) => {
     addGradientBorder(card)
   })
 }
@@ -395,13 +367,8 @@ function setupHoverAnimations() {
   const items = document.querySelectorAll('.main_left_titles_item')
   const projectsImage = document.querySelector('.projects_image')
 
-  console.log('Projects image element:', projectsImage) // Add this line for debugging
-
   function hoverIn(mainImage) {
-    if (!projectsImage) {
-      console.error('projectsImage element not found')
-      return
-    }
+    if (!projectsImage) return
     gsap.killTweensOf(projectsImage)
     projectsImage.style.backgroundImage = `url("${mainImage.src}")`
     gsap.fromTo(
@@ -412,10 +379,7 @@ function setupHoverAnimations() {
   }
 
   function hoverOut() {
-    if (!projectsImage) {
-      console.error('projectsImage element not found')
-      return
-    }
+    if (!projectsImage) return
     gsap.killTweensOf(projectsImage)
     gsap.to(projectsImage, {
       duration: 0.3,
@@ -432,8 +396,6 @@ function setupHoverAnimations() {
         item.addEventListener('mouseleave', hoverOut)
       }
     })
-  } else {
-    console.error('.projects_image element not found')
   }
 }
 
@@ -448,27 +410,20 @@ function fadeInWebsite() {
       duration: 1,
       ease: 'power2.out',
     })
-  } else {
-    console.error('.page_main element not found')
   }
 }
 
 function setupScrollToTop() {
   const footerScroll = document.querySelector('.footer_scroll')
-  console.log('footerScroll element:', footerScroll)
 
   if (footerScroll) {
-    console.log('Adding click event listener to footerScroll')
     footerScroll.addEventListener('click', (e) => {
-      console.log('footerScroll clicked')
       e.preventDefault()
       window.scrollTo({
         top: 0,
         behavior: 'smooth',
       })
     })
-  } else {
-    console.error('.footer_scroll element not found')
   }
 }
 
@@ -481,27 +436,17 @@ function setupSmoothScrolling() {
 
   Object.entries(navLinks).forEach(([navId, targetSelector]) => {
     const navElement = document.getElementById(navId)
-    console.log(`Setting up listener for ${navId}:`, navElement)
     if (navElement) {
       navElement.addEventListener('click', (e) => {
         e.preventDefault()
-        console.log(`${navId} clicked`)
         if (navId === 'nav_contact') {
           const contactMessage = document.getElementById('nav_contact_message')
-          const emailAddress = document.querySelector('.email-address') // Adjust this selector if needed
-
-          console.log('Contact elements:', { contactMessage, emailAddress })
+          const emailAddress = document.querySelector('.email-address')
 
           if (contactMessage && emailAddress) {
-            console.log(
-              'Attempting to copy email:',
-              emailAddress.textContent.trim()
-            )
             navigator.clipboard
               .writeText(emailAddress.textContent.trim())
               .then(() => {
-                console.log('Email copied successfully')
-                // Fade in the message
                 contactMessage.style.display = 'block'
                 gsap.fromTo(
                   contactMessage,
@@ -509,15 +454,12 @@ function setupSmoothScrolling() {
                   { opacity: 1, duration: 0.5 }
                 )
 
-                // Fade out and hide after 7 seconds
                 setTimeout(() => {
-                  console.log('Fading out message')
                   gsap.to(contactMessage, {
                     opacity: 0,
                     duration: 0.5,
                     onComplete: () => {
                       contactMessage.style.display = 'none'
-                      console.log('Message hidden')
                     },
                   })
                 }, 7000)
@@ -525,8 +467,6 @@ function setupSmoothScrolling() {
               .catch((err) => {
                 console.error('Failed to copy email: ', err)
               })
-          } else {
-            console.error('Contact message or email address element not found')
           }
         } else {
           const targetElement = document.querySelector(targetSelector)
@@ -538,8 +478,6 @@ function setupSmoothScrolling() {
           }
         }
       })
-    } else {
-      console.error(`Element with id ${navId} not found`)
     }
   })
 }
