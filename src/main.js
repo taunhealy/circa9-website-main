@@ -43,7 +43,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Add fade-in and stagger animations
   fadeInWebsite()
-  staggerHeroElements()
 
   // Filtering functionality
   const customButton = document.getElementById('button-custom')
@@ -86,13 +85,33 @@ document.addEventListener('DOMContentLoaded', function () {
     activeButton,
     inactiveButton
   ) {
-    if (hideContainer.style.display !== 'none') {
-      toggleContainers(showContainer, hideContainer)
-    } else {
-      showContainer.style.display = 'block'
-      gsap.fromTo(showContainer, { opacity: 0 }, { opacity: 1, duration: 0.3 })
-    }
-    setActiveButton(activeButton, inactiveButton)
+    // Fade out both buttons
+    gsap.to([activeButton, inactiveButton], {
+      opacity: 0,
+      duration: 0.3,
+      stagger: 0.1,
+      onComplete: () => {
+        if (hideContainer.style.display !== 'none') {
+          toggleContainers(showContainer, hideContainer)
+        } else {
+          showContainer.style.display = 'block'
+          gsap.fromTo(
+            showContainer,
+            { opacity: 0 },
+            { opacity: 1, duration: 0.5 }
+          )
+        }
+        setActiveButton(activeButton, inactiveButton)
+
+        // Fade in both buttons
+        gsap.to([activeButton, inactiveButton], {
+          opacity: 1,
+          duration: 0.5,
+          stagger: 0.1,
+          delay: 0.4, // Delay the fade-in to allow for container transition
+        })
+      },
+    })
   }
 
   customButton.addEventListener('click', () =>
@@ -121,6 +140,9 @@ document.addEventListener('DOMContentLoaded', function () {
   document.documentElement.style.setProperty('--brand-secondary', '#2800dc')
 
   console.log('main.js has finished loading')
+
+  // Add smooth scrolling for navigation links
+  setupSmoothScrolling()
 })
 
 // Animations
@@ -396,18 +418,74 @@ function fadeInWebsite() {
   }
 }
 
-function staggerHeroElements() {
-  const heroElements = document.querySelectorAll('.hero_section > *')
-  if (heroElements.length > 0) {
-    gsap.from(heroElements, {
-      opacity: 0,
-      y: 20,
-      duration: 0.8,
-      stagger: 0.2,
-      ease: 'power2.out',
-      delay: 0.5, // Delay the stagger animation to start after the initial fade-in
-    })
-  } else {
-    console.error('No .hero_section children found')
+function setupSmoothScrolling() {
+  const navLinks = {
+    nav_blog: '#blog_section',
+    nav_work: '#work_wrap',
+    nav_contact: '#contact_section',
   }
+
+  Object.entries(navLinks).forEach(([navId, targetSelector]) => {
+    const navElement = document.getElementById(navId)
+    console.log(`Setting up listener for ${navId}:`, navElement)
+    if (navElement) {
+      navElement.addEventListener('click', (e) => {
+        e.preventDefault()
+        console.log(`${navId} clicked`)
+        if (navId === 'nav_contact') {
+          const contactMessage = document.getElementById('nav_contact_message')
+          const emailAddress = document.querySelector('.email-address') // Adjust this selector if needed
+
+          console.log('Contact elements:', { contactMessage, emailAddress })
+
+          if (contactMessage && emailAddress) {
+            console.log(
+              'Attempting to copy email:',
+              emailAddress.textContent.trim()
+            )
+            navigator.clipboard
+              .writeText(emailAddress.textContent.trim())
+              .then(() => {
+                console.log('Email copied successfully')
+                // Fade in the message
+                contactMessage.style.display = 'block'
+                gsap.fromTo(
+                  contactMessage,
+                  { opacity: 0 },
+                  { opacity: 1, duration: 0.5 }
+                )
+
+                // Fade out and hide after 7 seconds
+                setTimeout(() => {
+                  console.log('Fading out message')
+                  gsap.to(contactMessage, {
+                    opacity: 0,
+                    duration: 0.5,
+                    onComplete: () => {
+                      contactMessage.style.display = 'none'
+                      console.log('Message hidden')
+                    },
+                  })
+                }, 7000)
+              })
+              .catch((err) => {
+                console.error('Failed to copy email: ', err)
+              })
+          } else {
+            console.error('Contact message or email address element not found')
+          }
+        } else {
+          const targetElement = document.querySelector(targetSelector)
+          if (targetElement) {
+            targetElement.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start',
+            })
+          }
+        }
+      })
+    } else {
+      console.error(`Element with id ${navId} not found`)
+    }
+  })
 }
