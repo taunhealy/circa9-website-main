@@ -11,6 +11,7 @@ import { mergeVertices } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
 
 gsap.registerPlugin(ScrollTrigger)
 
+// Hide console logs
 document.addEventListener('DOMContentLoaded', function () {
   const originalConsoleLog = console.log
   let hasLogged = false
@@ -22,6 +23,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 })
 
+// Scroll to top button
 document.addEventListener('DOMContentLoaded', function () {
   const footerScroll = document.querySelector('.footer_scroll')
 
@@ -36,6 +38,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 })
 
+// Initialize Vanta effect
 document.addEventListener('DOMContentLoaded', function () {
   // Initialize Vanta effect
   initHeroTopologyEffect()
@@ -152,6 +155,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // Animations
 
+// Vanta effect Topology
 function initHeroTopologyEffect() {
   const cgContainer = document.querySelector('.cg_container')
   if (!cgContainer) return
@@ -185,6 +189,7 @@ function initHeroTopologyEffect() {
   })
 }
 
+// Interactive Particles
 function initInteractiveParticles() {
   const fxContainer = document.querySelector('.fx_container')
   if (!fxContainer) return
@@ -366,6 +371,7 @@ function addGradientBorder(card) {
   card.classList.add('gradient-border')
 }
 
+// Hover Animations for Projects
 function setupHoverAnimations() {
   const items = document.querySelectorAll('.main_left_titles_item')
   const projectsImage = document.querySelector('.projects_image')
@@ -376,8 +382,8 @@ function setupHoverAnimations() {
     projectsImage.style.backgroundImage = `url("${mainImage.src}")`
     gsap.fromTo(
       projectsImage,
-      { opacity: 0, x: -100, scale: 1 },
-      { duration: 0.7, opacity: 1, x: 0, scale: 1, ease: 'power2.out' }
+      { opacity: 0, x: -50, scale: 1 },
+      { duration: 1, opacity: 1, x: 0, scale: 1, ease: 'power2.out' }
     )
   }
 
@@ -385,7 +391,7 @@ function setupHoverAnimations() {
     if (!projectsImage) return
     gsap.killTweensOf(projectsImage)
     gsap.to(projectsImage, {
-      duration: 0.3,
+      duration: 0.5,
       opacity: 0,
       ease: 'power2.in',
     })
