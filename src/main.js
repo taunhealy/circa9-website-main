@@ -214,7 +214,15 @@ function initInteractiveParticles() {
   const { scene, camera, renderer, particles, raycaster, pointer } =
     initThreeScene(fxContainer)
 
+  let animationId = null
+  let isHovering = false
+
   function animate() {
+    if (!isHovering) {
+      cancelAnimationFrame(animationId)
+      return
+    }
+
     particles.rotation.x += 0.0005
     particles.rotation.y += 0.001
 
@@ -239,10 +247,25 @@ function initInteractiveParticles() {
     }
 
     renderer.render(scene, camera)
-    requestAnimationFrame(animate)
+    animationId = requestAnimationFrame(animate)
   }
 
-  animate()
+  // Add hover event listeners to all cards
+  const cards = document.querySelectorAll('.blog_card_wrap')
+  cards.forEach(card => {
+    card.addEventListener('mouseenter', () => {
+      isHovering = true
+      gsap.to(fxContainer, { opacity: 1, duration: 0.5 })
+      animate()
+    })
+    card.addEventListener('mouseleave', () => {
+      isHovering = false
+      gsap.to(fxContainer, { opacity: 0, duration: 0.5 })
+    })
+  })
+
+  // Initial state: hidden
+  fxContainer.style.opacity = 0
 
   window.addEventListener('resize', () => {
     camera.aspect = fxContainer.clientWidth / fxContainer.clientHeight
