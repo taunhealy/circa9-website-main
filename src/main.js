@@ -391,7 +391,7 @@ function setupHoverAnimations() {
     if (!projectsImage) return
     gsap.killTweensOf(projectsImage)
     gsap.to(projectsImage, {
-      duration: 0.5,
+      duration: 0.75,
       opacity: 0,
       ease: 'power2.in',
     })
