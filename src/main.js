@@ -145,6 +145,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Add smooth scrolling for navigation links
   setupSmoothScrolling()
+
+  // Add the blog card read-more effect
+  setupBlogCardReadMoreEffect()
 })
 
 // Animations
@@ -540,4 +543,55 @@ function initGlowingSphere() {
   })
 
   observer.observe(container, { childList: true })
+}
+
+function setupBlogCardReadMoreEffect() {
+  const blogCards = document.querySelectorAll('.blog_card_wrap')
+
+  blogCards.forEach((card) => {
+    const readMoreElement = card.querySelector('.blog_card_read-more')
+    if (!readMoreElement) return
+
+    const originalText = readMoreElement.innerText
+    let interval
+
+    function shuffleText(target, progress) {
+      const finalText = 'open'
+      return finalText
+        .split('')
+        .map((letter, index) => {
+          if (index < progress) {
+            return finalText[index]
+          }
+          return String.fromCharCode(97 + Math.floor(Math.random() * 26))
+        })
+        .join('')
+        .slice(0, 5)
+    }
+
+    function animateText(forward = true) {
+      clearInterval(interval)
+      let iteration = forward ? 0 : 5
+      const maxIterations = 5
+
+      interval = setInterval(() => {
+        if (forward && iteration >= maxIterations) {
+          clearInterval(interval)
+          readMoreElement.innerText = 'open'
+          return
+        }
+        if (!forward && iteration <= 0) {
+          clearInterval(interval)
+          readMoreElement.innerText = originalText
+          return
+        }
+
+        readMoreElement.innerText = shuffleText(originalText, iteration)
+        iteration += forward ? 0.5 : -0.5
+      }, 30)
+    }
+
+    card.addEventListener('mouseenter', () => animateText(true))
+    card.addEventListener('mouseleave', () => animateText(false))
+  })
 }
