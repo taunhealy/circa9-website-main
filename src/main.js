@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
   */
 
 // Hide console logs
-/*
+
 document.addEventListener('DOMContentLoaded', function () {
   const originalConsoleLog = console.log
   let hasLogged = false
@@ -35,7 +35,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 })
-  */
 
 // Scroll to top button
 document.addEventListener('DOMContentLoaded', function () {
