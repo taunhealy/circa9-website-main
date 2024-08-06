@@ -58,7 +58,6 @@ document.addEventListener('DOMContentLoaded', function () {
   // Initialize other effects
   initInteractiveParticles()
   setupHoverAnimations()
-  initBlogCardEffects()
 
   // Add fade-in and stagger animations
   fadeInWebsite()
