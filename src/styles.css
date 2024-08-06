@@ -3,9 +3,36 @@
   --brand-secondary: #4001c6 !important;
 }
 
-.main_heading_h3.is-themes,
-.main_heading_h3.is-custom {
-  transition: color 0.3s ease;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.main_heading_h3.is-custom.active {
+  animation: fadeIn 0.5s forwards;
+}
+
+.main_heading_h3.is-themes.inactive,
+.main_heading_h3.is-custom.inactive {
+  animation: fadeOut 0.5s forwards;
+}
+
+.main_heading_h3.is-custom.active,
+.main_heading_h3.is-custom.inactive {
+  animation-delay: 0.2s;
 }
 
 .projects_image {
@@ -17,6 +44,7 @@
   background-size: cover;
   background-position: center;
   opacity: 0;
+  z-index: 9;
 }
 
 .main_left_titles_item .main_text {
@@ -44,58 +72,60 @@
 }
 
 #fixed-image-container {
-  position: sticky; /* Change to sticky positioning */
-  top: 15%; /* Adjust as needed */
-  right: 0; /* Align to the right */
-  left: auto !important; /* Remove left positioning */
-  transform: none !important; /* Remove transform */
-  width: 80%; /* Adjust width as needed */
+  position: sticky;
+  top: 15%;
+  right: 0;
+  left: auto !important;
+  transform: none !important;
+  width: 80%;
   max-width: 50vw;
   min-width: 25vw;
-  height: 70vh; /* Adjust height as needed */
+  height: 70vh;
   overflow: visible;
   z-index: 10;
   background-color: transparent;
 }
 
-.projects_image {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-size: cover;
-  background-position: center;
-  opacity: 0;
+.fixed-image-container {
+  overflow: hidden !important;
+  width: 30% !important;
+  height: 300px;
+  min-height: 200px;
+  max-height: 30vh;
+  position: relative;
+  z-index: 10;
+  border-radius: 10px;
+  border: 1px solid var(--brand-secondary);
+  opacity: 1;
 }
 
 .gradient-border {
   position: relative;
-  background: #000; /* Adjust this to match your card's background color */
-  padding: 1px; /* This creates space for the border */
-  border-radius: 9px; /* Adjust as needed */
-  box-shadow: 0 0 1px rgba(63, 94, 251, 0.5); /* Outer glow */
+  background: #000;
+  padding: 1px;
+  border-radius: 9px;
+  box-shadow: 0 0 1px rgba(63, 94, 251, 0.5);
   transition: box-shadow 0.3s ease;
 }
 
 .gradient-border::before {
-  filter: blur(1px); /* Creates the neon effect */
-  opacity: 0.8; /* Adjust for desired intensity */
+  filter: blur(1px);
+  opacity: 0.8;
 }
 
 .gradient-border::after {
-  filter: blur(5px); /* Creates an additional glow layer */
-  opacity: 0.4; /* Adjust for desired intensity */
+  filter: blur(5px);
+  opacity: 0.4;
 }
 
 .gradient-border:hover {
-  box-shadow: 0 0 50px rgba(63, 94, 251, 0.8); /* Increased outer glow on hover */
+  box-shadow: 0 0 50px rgba(63, 94, 251, 0.8);
 }
 
 .gradient-border-wrapper {
-  background: #000; /* Adjust this to match your card's background color */
-  padding: 20px; /* Adjust as needed */
-  border-radius: 8px; /* Slightly smaller than the card's border-radius */
+  background: #000;
+  padding: 20px;
+  border-radius: 8px;
 }
 
 @keyframes animateGradient {
@@ -110,54 +140,26 @@
   }
 }
 
-.fixed-image-container {
-  overflow: hidden !important;
-  width: 30% !important;
-  height: 300px; /* Fixed height instead of percentage */
-  min-height: 200px; /* Minimum height */
-  max-height: 30vh; /* Maximum height */
-  position: relative;
-  z-index: 10;
-  border-radius: 10px;
-  border: 1px solid var(--brand-secondary); /* Shorthand for border properties */
-  opacity: 1;
-}
-
-.projects_image {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-size: cover;
-  background-position: center;
-  opacity: 0;
-  z-index: 9;
-}
-
 .blog_card_wrap {
   transition: border-color 0.3s ease;
 }
 
 .blog_card_read-more {
-  font-size: 16px !important; /* Force 16px font size */
-  transition: color 0.5s ease; /* Smooth transition for color changes */
+  font-size: 16px !important;
+  transition: border-color 0.5s ease;
 }
 
 .blog_card_wrap:hover .blog_card_read-more {
   font-size: 16px !important;
-  border-color: var(--brand-secondary) !important;
-  transition: border-color 0.7s ease in out;
-  /* You can add other hover effects here if needed */
+  border-color: #ff10f1 !important;
+  transition: border-color 0.7s ease-in-out;
 }
 
-/* If the above doesn't work, try targeting more specifically */
 .blog_card_wrap .blog_card_read-more,
 .blog_card_wrap:hover .blog_card_read-more {
   font-size: 16px !important;
 }
 
-/* Prevent any inherited size changes */
 .blog_card_wrap * {
   font-size: inherit;
 }

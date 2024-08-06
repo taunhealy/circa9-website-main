@@ -350,42 +350,96 @@ function createParticles() {
 // Hover Animations for Projects
 function setupHoverAnimations() {
   const items = document.querySelectorAll('.main_left_titles_item')
-  const projectsImage = document.querySelector('.projects_image')
+  const projectsImage = document.querySelector('.fixed-image-container')
 
-  function hoverIn(mainImage) {
-    if (!projectsImage) return
-    gsap.killTweensOf(projectsImage)
-    projectsImage.style.backgroundImage = `url("${mainImage.src}")`
+  console.log('Items found:', items.length)
+  console.log('Projects image container found:', !!projectsImage)
+
+  // Create a single image element that we'll reuse
+  const img = document.createElement('img')
+  img.style.position = 'absolute'
+  img.style.top = '0'
+  img.style.left = '0'
+  img.style.width = '100%'
+  img.style.height = '100%'
+  img.style.objectFit = 'cover'
+  img.style.opacity = '0' // Start with the image hidden
+
+  if (projectsImage) {
+    projectsImage.appendChild(img)
+  }
+
+  // Initialize the neon balls animation
+  const neonBallsCanvas = initGlowingSphere()
+
+  let currentItem = null
+
+  function hoverIn(item) {
+    if (!projectsImage || currentItem === item) return
+
+    currentItem = item
+    const mainImage = item.querySelector('img')
+    console.log('Hover in', mainImage.src)
+
+    gsap.killTweensOf(img)
+    gsap.killTweensOf(neonBallsCanvas)
+
+    img.src = mainImage.src
     gsap.fromTo(
-      projectsImage,
-      { opacity: 0.7, x: -30, scale: 1 },
-      { duration: 0.5, opacity: 1, x: 0, scale: 1, ease: 'power2.out' }
+      img,
+      { opacity: 0, scale: 1.1 },
+      {
+        duration: 0.5,
+        opacity: 1,
+        scale: 1,
+        ease: 'power2.out',
+        onStart: () => {
+          console.log('Animation started')
+          gsap.to(neonBallsCanvas, { duration: 0.3, opacity: 0 })
+        },
+        onComplete: () => console.log('Animation completed'),
+      }
     )
   }
 
   function hoverOut() {
-    if (!projectsImage) return
-    gsap.killTweensOf(projectsImage)
-    gsap.to(projectsImage, {
-      duration: 0.3, // Reduced from 0.75 to 0.3 seconds
+    if (!projectsImage || !currentItem) return
+    console.log('Hover out')
+
+    currentItem = null
+    gsap.killTweensOf(img)
+    gsap.killTweensOf(neonBallsCanvas)
+
+    gsap.to(img, {
+      duration: 0.3,
       opacity: 0,
+      scale: 1.1,
       ease: 'power2.in',
+      onComplete: () => {
+        console.log('Hover out animation completed')
+        gsap.to(neonBallsCanvas, { duration: 0.5, opacity: 1 })
+      },
     })
   }
 
   if (projectsImage) {
-    items.forEach((item) => {
+    items.forEach((item, index) => {
       const mainImage = item.querySelector('img')
       if (mainImage) {
-        item.addEventListener('mouseenter', () => hoverIn(mainImage))
+        console.log(`Adding event listeners to item ${index}`)
+        item.addEventListener('mouseenter', () => hoverIn(item))
         item.addEventListener('mouseleave', hoverOut)
+      } else {
+        console.error(`No image found for item ${index}`)
       }
     })
+  } else {
+    console.error('Projects image container not found')
   }
 }
 
-// Make sure to call the function after it's defined
-setupHoverAnimations()
+// Make sure to call the function after the DOM is fully loaded
+document.addEventListener('DOMContentLoaded', setupHoverAnimations)
 
 function fadeInWebsite() {
   const mainPage = document.querySelector('.page_main')
@@ -484,40 +538,66 @@ function initGlowingSphere() {
   renderer.setSize(container.clientWidth, container.clientHeight)
   container.appendChild(renderer.domElement)
 
-  const geometry = new THREE.SphereGeometry(1, 32, 32)
+  const geometry = new THREE.PlaneGeometry(2, 2)
   const material = new THREE.ShaderMaterial({
     uniforms: {
-      time: { value: 0 },
+      iTime: { value: 0 },
+      iResolution: {
+        value: new THREE.Vector3(
+          container.clientWidth,
+          container.clientHeight,
+          1
+        ),
+      },
     },
     vertexShader: `
-      varying vec3 vNormal;
       void main() {
-        vNormal = normalize(normalMatrix * normal);
-        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        gl_Position = vec4(position, 1.0);
       }
     `,
     fragmentShader: `
-      uniform float time;
-      varying vec3 vNormal;
+      uniform float iTime;
+      uniform vec3 iResolution;
+
+      float stepping(float t){
+          if(t<0.)return -1.+pow(1.+t,2.);
+          else return 1.-pow(1.-t,2.);
+      }
+
+      void mainImage( out vec4 fragColor, in vec2 fragCoord )
+      {
+        vec2 uv = (fragCoord*2.-iResolution.xy)/iResolution.y;
+        fragColor = vec4(0);
+        uv = normalize(uv) * length(uv);
+        for(int i=0;i<12;i++){
+            float t = iTime + float(i)*3.141592/12.*(5.+1.*stepping(sin(iTime*3.)));
+            vec2 p = vec2(cos(t),sin(t));
+            p *= cos(iTime + float(i)*3.141592*cos(iTime/8.));
+            vec3 col = cos(vec3(0,1,-1)*3.141592*2./3.+3.141925*(iTime/2.+float(i)/5.)) * 0.5 + 0.5;
+            // Adjust color to purple hues
+            col = mix(vec3(0.3, 0, 0.6), vec3(0.15, 0, 0.3), col.x);
+            fragColor += vec4(0.03/length(uv-p*0.9)*col,1.0);
+        }
+        fragColor.xyz = pow(fragColor.xyz,vec3(2.2));
+        fragColor.xyz = smoothstep(0.0, 0.8, fragColor.xyz);
+        fragColor.w = 1.0;
+      }
+
       void main() {
-        vec3 color = vec3(3.157, 3.0, 1.863); // Brand secondary color (#2800dc)
-        float intensity = pow(0.7 - dot(vNormal, vec3(0, 0, 1.0)), 2.0);
-        gl_FragColor = vec4(color, 0.7) * intensity * (1.2 + 0.3 * sin(time));
+        mainImage(gl_FragColor, gl_FragCoord.xy);
       }
     `,
     transparent: true,
   })
 
-  const sphere = new THREE.Mesh(geometry, material)
-  scene.add(sphere)
+  const quad = new THREE.Mesh(geometry, material)
+  scene.add(quad)
 
-  camera.position.z = 5
+  camera.position.z = 1
 
   function animate() {
     requestAnimationFrame(animate)
-    sphere.rotation.x += 0.03
-    sphere.rotation.y += 0.01
-    material.uniforms.time.value += 0.01
+    material.uniforms.iTime.value += 0.01
     renderer.render(scene, camera)
   }
 
@@ -525,24 +605,15 @@ function initGlowingSphere() {
 
   // Resize handler
   window.addEventListener('resize', () => {
-    camera.aspect = container.clientWidth / container.clientHeight
+    const width = container.clientWidth
+    const height = container.clientHeight
+    camera.aspect = width / height
     camera.updateProjectionMatrix()
-    renderer.setSize(container.clientWidth, container.clientHeight)
+    renderer.setSize(width, height)
+    material.uniforms.iResolution.value.set(width, height, 1)
   })
 
-  // Remove the sphere when an image is loaded
-  const observer = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
-      if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
-        const addedNode = mutation.addedNodes[0]
-        if (addedNode.nodeName === 'IMG') {
-          renderer.domElement.style.display = 'none'
-        }
-      }
-    })
-  })
-
-  observer.observe(container, { childList: true })
+  return renderer.domElement
 }
 
 function setupBlogCardReadMoreEffect() {
