@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', function () {
 })
 
 // Hide console logs
+/*
 document.addEventListener('DOMContentLoaded', function () {
   const originalConsoleLog = console.log
   let hasLogged = false
@@ -32,6 +33,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 })
+  */
 
 // Scroll to top button
 document.addEventListener('DOMContentLoaded', function () {
@@ -105,33 +107,9 @@ document.addEventListener('DOMContentLoaded', function () {
     activeButton,
     inactiveButton
   ) {
-    // Fade out both buttons
-    gsap.to([activeButton, inactiveButton], {
-      opacity: 0,
-      duration: 0.3,
-      stagger: 0.1,
-      onComplete: () => {
-        if (hideContainer.style.display !== 'none') {
-          toggleContainers(showContainer, hideContainer)
-        } else {
-          showContainer.style.display = 'block'
-          gsap.fromTo(
-            showContainer,
-            { opacity: 0 },
-            { opacity: 1, duration: 0.5 }
-          )
-        }
-        setActiveButton(activeButton, inactiveButton)
-
-        // Fade in both buttons
-        gsap.to([activeButton, inactiveButton], {
-          opacity: 1,
-          duration: 0.5,
-          stagger: 0.1,
-          delay: 0.4, // Delay the fade-in to allow for container transition
-        })
-      },
-    })
+    // Remove the fade-out animation for buttons
+    toggleContainers(showContainer, hideContainer)
+    setActiveButton(activeButton, inactiveButton)
   }
 
   customButton.addEventListener('click', () =>
