@@ -109,3 +109,28 @@
     background-position: 0% 50%;
   }
 }
+
+.fixed-image-container {
+  overflow: hidden !important;
+  width: 30% !important;
+  height: 300px; /* Fixed height instead of percentage */
+  min-height: 200px; /* Minimum height */
+  max-height: 30vh; /* Maximum height */
+  position: relative;
+  z-index: 10;
+  border-radius: 10px;
+  border: 1px solid #2800ac; /* Shorthand for border properties */
+  opacity: 1;
+}
+
+.projects_image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  z-index: 9;
+}

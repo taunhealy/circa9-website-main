@@ -11,6 +11,7 @@ import { mergeVertices } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
 
 gsap.registerPlugin(ScrollTrigger)
 
+/*
 document.addEventListener('DOMContentLoaded', function () {
   const navLink1 = document.getElementById('nav_link_1')
   if (navLink1) {
@@ -20,6 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
     navLink1.style.fontWeight = 'bold'
   }
 })
+  */
 
 // Hide console logs
 /*
@@ -225,12 +227,12 @@ function initInteractiveParticles() {
   cards.forEach((card) => {
     card.addEventListener('mouseenter', () => {
       isHovering = true
-      gsap.to(fxContainer, { opacity: 1, duration: 0.5 })
+      gsap.to(fxContainer, { opacity: 1, duration: 0.3 })
       animate()
     })
     card.addEventListener('mouseleave', () => {
       isHovering = false
-      gsap.to(fxContainer, { opacity: 0, duration: 0.5 })
+      gsap.to(fxContainer, { opacity: 0, duration: 0.3 })
     })
   })
 
@@ -348,8 +350,8 @@ function setupHoverAnimations() {
     projectsImage.style.backgroundImage = `url("${mainImage.src}")`
     gsap.fromTo(
       projectsImage,
-      { opacity: 0, x: -50, scale: 1 },
-      { duration: 1.2, opacity: 1, x: 0, scale: 1, ease: 'power3.out' }
+      { opacity: 0.7, x: -30, scale: 1 },
+      { duration: 0.5, opacity: 1, x: 0, scale: 1, ease: 'power2.out' }
     )
   }
 
