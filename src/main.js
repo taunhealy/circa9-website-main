@@ -179,7 +179,7 @@ function initHeroTopologyEffect() {
       } catch (error) {
         cgContainer.style.backgroundColor = '#000'
       }
-    }, 1000)
+    }, 300) // Reduced from 700 to 300 milliseconds
   })
 }
 
@@ -364,7 +364,7 @@ function setupHoverAnimations() {
     if (!projectsImage) return
     gsap.killTweensOf(projectsImage)
     gsap.to(projectsImage, {
-      duration: 0.75,
+      duration: 0.3, // Reduced from 0.75 to 0.3 seconds
       opacity: 0,
       ease: 'power2.in',
     })
@@ -499,7 +499,7 @@ function initGlowingSphere() {
       void main() {
         vec3 color = vec3(3.157, 3.0, 1.863); // Brand secondary color (#2800dc)
         float intensity = pow(0.7 - dot(vNormal, vec3(0, 0, 1.0)), 2.0);
-        gl_FragColor = vec4(color, 1.0) * intensity * (1.2 + 0.3 * sin(time));
+        gl_FragColor = vec4(color, 0.7) * intensity * (1.2 + 0.3 * sin(time));
       }
     `,
     transparent: true,
@@ -512,9 +512,9 @@ function initGlowingSphere() {
 
   function animate() {
     requestAnimationFrame(animate)
-    sphere.rotation.x += 0.01
+    sphere.rotation.x += 0.03
     sphere.rotation.y += 0.01
-    material.uniforms.time.value += 0.05
+    material.uniforms.time.value += 0.01
     renderer.render(scene, camera)
   }
 
