@@ -30,7 +30,10 @@ document.addEventListener('DOMContentLoaded', function () {
   let hasLogged = false
   console.log = function () {
     if (!hasLogged) {
-      originalConsoleLog.call(console, 'Designed & Developed by Circa9')
+      originalConsoleLog.call(
+        console,
+        'Designed & Developed by Taun Healy of Circa9'
+      )
       hasLogged = true
     }
   }
