@@ -11,6 +11,16 @@ import { mergeVertices } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
 
 gsap.registerPlugin(ScrollTrigger)
 
+document.addEventListener('DOMContentLoaded', function () {
+  const navLink1 = document.getElementById('nav_link_1')
+  if (navLink1) {
+    navLink1.innerText =
+      'Undergoing maintenance. Ill be back in order in a few hours. Happy exploring.'
+    navLink1.style.color = 'white'
+    navLink1.style.fontWeight = 'bold'
+  }
+})
+
 // Hide console logs
 document.addEventListener('DOMContentLoaded', function () {
   const originalConsoleLog = console.log
