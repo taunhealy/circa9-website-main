@@ -69,6 +69,9 @@ document.addEventListener('DOMContentLoaded', function () {
   // Add scroll to top functionality
   setupScrollToTop()
 
+  // Add the glowing sphere effect
+  initGlowingSphere()
+
   // Filtering functionality
   const customButton = document.getElementById('button-custom')
   const themesButton = document.getElementById('button-themes')
@@ -459,4 +462,82 @@ function setupSmoothScrolling() {
       })
     }
   })
+}
+
+// New function to create the glowing sphere
+function initGlowingSphere() {
+  const container = document.querySelector('.fixed-image-container')
+  if (!container) return
+
+  const scene = new THREE.Scene()
+  const camera = new THREE.PerspectiveCamera(
+    75,
+    container.clientWidth / container.clientHeight,
+    0.1,
+    1000
+  )
+  const renderer = new THREE.WebGLRenderer({ alpha: true })
+
+  renderer.setSize(container.clientWidth, container.clientHeight)
+  container.appendChild(renderer.domElement)
+
+  const geometry = new THREE.SphereGeometry(1, 32, 32)
+  const material = new THREE.ShaderMaterial({
+    uniforms: {
+      time: { value: 0 },
+    },
+    vertexShader: `
+      varying vec3 vNormal;
+      void main() {
+        vNormal = normalize(normalMatrix * normal);
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `,
+    fragmentShader: `
+      uniform float time;
+      varying vec3 vNormal;
+      void main() {
+        vec3 color = vec3(3.157, 3.0, 1.863); // Brand secondary color (#2800dc)
+        float intensity = pow(0.7 - dot(vNormal, vec3(0, 0, 1.0)), 2.0);
+        gl_FragColor = vec4(color, 1.0) * intensity * (1.2 + 0.3 * sin(time));
+      }
+    `,
+    transparent: true,
+  })
+
+  const sphere = new THREE.Mesh(geometry, material)
+  scene.add(sphere)
+
+  camera.position.z = 5
+
+  function animate() {
+    requestAnimationFrame(animate)
+    sphere.rotation.x += 0.01
+    sphere.rotation.y += 0.01
+    material.uniforms.time.value += 0.05
+    renderer.render(scene, camera)
+  }
+
+  animate()
+
+  // Resize handler
+  window.addEventListener('resize', () => {
+    camera.aspect = container.clientWidth / container.clientHeight
+    camera.updateProjectionMatrix()
+    renderer.setSize(container.clientWidth, container.clientHeight)
+  })
+
+  // Remove the sphere when an image is loaded
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+        const addedNode = mutation.addedNodes[0]
+        if (addedNode.nodeName === 'IMG') {
+          renderer.domElement.style.display = 'none'
+        }
+      }
+    })
+  })
+
+  observer.observe(container, { childList: true })
 }
