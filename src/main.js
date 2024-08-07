@@ -648,7 +648,7 @@ function setupBlogCardReadMoreEffect() {
       interval = setInterval(() => {
         if (forward && iteration >= maxIterations) {
           clearInterval(interval)
-          readMoreElement.innerText = 'open'
+          readMoreElement.innerText = 'explore'
           return
         }
         if (!forward && iteration <= 0) {
