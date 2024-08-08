@@ -3,6 +3,14 @@
   --brand-secondary: #4001c6 !important;
 }
 
+// Media Queries
+
+@media screen and (max-width: 991px) {
+  #fixed-image-container {
+    display: none;
+  }
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
