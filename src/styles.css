@@ -159,7 +159,3 @@
 .blog_card_wrap:hover .blog_card_read-more {
   font-size: 16px !important;
 }
-
-.blog_card_wrap * {
-  font-size: inherit;
-}
