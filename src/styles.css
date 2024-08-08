@@ -159,7 +159,7 @@
 
 .blog_card_wrap:hover .blog_card_read-more {
   font-size: 16px !important;
-  border-color: #ff10f1 !important;
+  border-color: var(--brand-secondary) !important;
   transition: border-color 0.7s ease-in-out;
 }
 
