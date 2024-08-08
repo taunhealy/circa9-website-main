@@ -101,10 +101,15 @@ document.addEventListener('DOMContentLoaded', function () {
     activeButton.style.color = 'var(--brand-secondary)'
     inactiveButton.style.color = ''
 
-    activeButton
-      .querySelectorAll('*')
-      .forEach((el) => (el.style.color = 'var(--brand-secondary)'))
-    inactiveButton.querySelectorAll('*').forEach((el) => (el.style.color = ''))
+    // Remove font size changes
+    activeButton.querySelectorAll('*').forEach((el) => {
+      el.style.color = 'var(--brand-secondary)'
+      el.style.fontSize = '' // Reset font size to default
+    })
+    inactiveButton.querySelectorAll('*').forEach((el) => {
+      el.style.color = ''
+      el.style.fontSize = '' // Reset font size to default
+    })
   }
 
   function handleButtonClick(
