@@ -389,22 +389,27 @@ function setupHoverAnimations() {
     gsap.killTweensOf(img)
     gsap.killTweensOf(neonBallsCanvas)
 
+    // Set the new image source before starting the animation
     img.src = mainImage.src
-    gsap.fromTo(
-      img,
-      { opacity: 0, scale: 1.1 },
-      {
-        duration: 0.5,
-        opacity: 1,
-        scale: 1,
-        ease: 'power2.out',
-        onStart: () => {
-          console.log('Animation started')
-          gsap.to(neonBallsCanvas, { duration: 0.3, opacity: 0 })
-        },
-        onComplete: () => console.log('Animation completed'),
-      }
-    )
+
+    // Use a short delay to ensure the new image is loaded
+    setTimeout(() => {
+      gsap.fromTo(
+        img,
+        { opacity: 0.5, scale: 1.05 }, // Increased start opacity and reduced scale
+        {
+          duration: 0.4, // Slightly reduced duration
+          opacity: 1,
+          scale: 1,
+          ease: 'power2.out',
+          onStart: () => {
+            console.log('Animation started')
+            gsap.to(neonBallsCanvas, { duration: 0.3, opacity: 0 })
+          },
+          onComplete: () => console.log('Animation completed'),
+        }
+      )
+    }, 50) // Short delay to allow image loading
   }
 
   function hoverOut() {
