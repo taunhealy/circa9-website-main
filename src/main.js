@@ -733,13 +733,12 @@ function createNeonGlowEffect(element) {
   renderer.domElement.style.transition = 'opacity 0.3s'
 
   return {
-    visible: false,
+    get visible() {
+      return this._visible
+    },
     set visible(value) {
       this._visible = value
       renderer.domElement.style.opacity = value ? 1 : 0
-    },
-    get visible() {
-      return this._visible
     },
   }
 }
