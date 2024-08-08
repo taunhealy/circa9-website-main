@@ -65,6 +65,7 @@ document.addEventListener('DOMContentLoaded', function () {
   // Initialize other effects
   initInteractiveParticles()
   setupHoverAnimations()
+  setupWorkSectionAnimations()
 
   // Add fade-in and stagger animations
   fadeInWebsite()
@@ -387,32 +388,48 @@ function setupHoverAnimations() {
 
     currentItem = item
     const mainImage = item.querySelector('img')
-    console.log('Hover in', mainImage.src)
+    const titleElement = item.querySelector(
+      '.blog_card_inner-text .blog_post_title'
+    )
+    const bodyElement = item.querySelector(
+      '.blog_card_inner-text .blog_post_body'
+    )
+    const innerTextContainer = item.querySelector('.blog_card_inner-text')
 
-    gsap.killTweensOf(img)
-    gsap.killTweensOf(neonBallsCanvas)
+    // Ensure the image is loaded before setting the source
+    if (mainImage) {
+      img.src = mainImage.src
+      img.onload = () => {
+        console.log('Image loaded:', img.src)
+        gsap.fromTo(
+          img,
+          { opacity: 0.5, scale: 1.05 },
+          {
+            duration: 0.4,
+            opacity: 1,
+            scale: 1,
+            ease: 'power2.out',
+            onStart: () => {
+              console.log('Animation started')
+              gsap.to(neonBallsCanvas, { duration: 0.3, opacity: 0 })
+            },
+            onComplete: () => console.log('Animation completed'),
+          }
+        )
+      }
+    } else {
+      console.error('Main image not found')
+    }
 
-    // Set the new image source before starting the animation
-    img.src = mainImage.src
+    // Set inner text container to display block and start visible
+    innerTextContainer.style.display = 'block'
+    innerTextContainer.style.position = 'absolute'
+    innerTextContainer.style.opacity = '1'
 
-    // Use a short delay to ensure the new image is loaded
-    setTimeout(() => {
-      gsap.fromTo(
-        img,
-        { opacity: 0.5, scale: 1.05 }, // Increased start opacity and reduced scale
-        {
-          duration: 0.4, // Slightly reduced duration
-          opacity: 1,
-          scale: 1,
-          ease: 'power2.out',
-          onStart: () => {
-            console.log('Animation started')
-            gsap.to(neonBallsCanvas, { duration: 0.3, opacity: 0 })
-          },
-          onComplete: () => console.log('Animation completed'),
-        }
-      )
-    }, 50) // Short delay to allow image loading
+    // Set body text to title text
+    bodyElement.innerText = titleElement.innerText
+    bodyElement.style.fontSize = '16px'
+    bodyElement.style.color = 'var(--brand-secondary)'
   }
 
   function hoverOut() {
@@ -449,6 +466,12 @@ function setupHoverAnimations() {
   } else {
     console.error('Projects image container not found')
   }
+}
+
+// Call this function separately for work section animations
+function setupWorkSectionAnimations() {
+  // Implement work section animations here
+  // This function can contain the logic specific to the work section animations
 }
 
 // Make sure to call the function after the DOM is fully loaded
@@ -699,10 +722,10 @@ function createNeonGlowEffect(element) {
   renderer.setSize(rect.width, rect.height)
   element.appendChild(renderer.domElement)
 
-  const geometry = new THREE.CircleGeometry(0.5, 32)
-  const material = new THREE.MeshBasicMaterial({ color: 0xffffff })
-  const circle = new THREE.Mesh(geometry, material)
-  scene.add(circle)
+  const geometry = new THREE.PlaneGeometry(1, 1) // Changed to PlaneGeometry for square
+  const material = new THREE.MeshBasicMaterial({ color: 0xffffff }) // Initial color
+  const square = new THREE.Mesh(geometry, material)
+  scene.add(square)
 
   camera.position.z = 1
 
@@ -722,9 +745,27 @@ function createNeonGlowEffect(element) {
   composer.addPass(renderScene)
   composer.addPass(bloomPass)
 
+  // Pulsing effect
+  let pulseDirection = 1
+  let pulseScale = 1
+  const pulseSpeed = 120 / 60 // 120 BPM converted to scale factor (1 beat = 1 second)
+  const bounceScaleFactor = 0.1 // Additional scale for bouncing effect
+
   function animate() {
     requestAnimationFrame(animate)
     composer.render()
+
+    // Pulsing effect logic
+    pulseScale += pulseSpeed * pulseDirection * 0.01 // Adjusted for BPM
+    if (pulseScale > 1.5 || pulseScale < 1) pulseDirection *= -1
+
+    // Update square scale for bouncing effect
+    const bounceScale = 1 + Math.sin(Date.now() * 0.005) * bounceScaleFactor // Bouncing effect
+    square.scale.set(pulseScale * bounceScale, pulseScale * bounceScale, 1) // Scale for pulsing and bouncing effect
+
+    // Update square color to brand secondary
+    const brandSecondaryColor = new THREE.Color('#2800dc') // Your brand secondary color
+    material.color.lerp(brandSecondaryColor, 0.1) // Smooth transition to brand color
   }
   animate()
 
