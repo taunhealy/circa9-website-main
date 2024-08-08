@@ -7,6 +7,9 @@ import gsap from 'gsap'
 import ScrollTrigger from 'gsap/src/ScrollTrigger'
 import './styles.css'
 import * as THREE from 'three'
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
+import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js'
 import { mergeVertices } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -631,7 +634,8 @@ function setupBlogCardReadMoreEffect() {
 
   blogCards.forEach((card) => {
     const readMoreElement = card.querySelector('.blog_card_read-more')
-    if (!readMoreElement) return
+    const categoryCircle = card.querySelector('.blog_card_category-circle')
+    if (!readMoreElement || !categoryCircle) return
 
     const originalText = readMoreElement.innerText
     let interval
@@ -672,7 +676,70 @@ function setupBlogCardReadMoreEffect() {
       }, 30)
     }
 
-    card.addEventListener('mouseenter', () => animateText(true))
-    card.addEventListener('mouseleave', () => animateText(false))
+    // Add neon glow effect
+    const neonGlow = createNeonGlowEffect(categoryCircle)
+
+    card.addEventListener('mouseenter', () => {
+      animateText(true)
+      neonGlow.visible = true
+    })
+    card.addEventListener('mouseleave', () => {
+      animateText(false)
+      neonGlow.visible = false
+    })
   })
+}
+
+function createNeonGlowEffect(element) {
+  const rect = element.getBoundingClientRect()
+  const scene = new THREE.Scene()
+  const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 10)
+  const renderer = new THREE.WebGLRenderer({ alpha: true })
+
+  renderer.setSize(rect.width, rect.height)
+  element.appendChild(renderer.domElement)
+
+  const geometry = new THREE.CircleGeometry(0.5, 32)
+  const material = new THREE.MeshBasicMaterial({ color: 0xffffff })
+  const circle = new THREE.Mesh(geometry, material)
+  scene.add(circle)
+
+  camera.position.z = 1
+
+  // Add bloom effect
+  const renderScene = new RenderPass(scene, camera)
+  const bloomPass = new UnrealBloomPass(
+    new THREE.Vector2(rect.width, rect.height),
+    1.5,
+    0.4,
+    0.85
+  )
+  bloomPass.threshold = 0
+  bloomPass.strength = 2
+  bloomPass.radius = 0.5
+
+  const composer = new EffectComposer(renderer)
+  composer.addPass(renderScene)
+  composer.addPass(bloomPass)
+
+  function animate() {
+    requestAnimationFrame(animate)
+    composer.render()
+  }
+  animate()
+
+  // Hide initially
+  renderer.domElement.style.opacity = 0
+  renderer.domElement.style.transition = 'opacity 0.3s'
+
+  return {
+    visible: false,
+    set visible(value) {
+      this._visible = value
+      renderer.domElement.style.opacity = value ? 1 : 0
+    },
+    get visible() {
+      return this._visible
+    },
+  }
 }
