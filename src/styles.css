@@ -1,6 +1,6 @@
 /* ... existing styles ... */
 :root {
-  --brand-secondary: #4001c6 !important;
+  --brand-secondary: #5000d1 !important;
 }
 
 // Media Queries
@@ -62,7 +62,7 @@
 }
 
 .main_left_titles_item:hover .main_text {
-  background-color: #2800dc;
+  background-color: var(--brand-secondary);
   color: white;
   padding-left: 32px;
   padding-right: 8px;
@@ -166,4 +166,13 @@
 .blog_card_wrap .blog_card_read-more,
 .blog_card_wrap:hover .blog_card_read-more {
   font-size: 16px !important;
+}
+
+.cg_container {
+  position: absolute; /* Ensure it can be positioned within the parent */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden; /* Ensure no overflow */
 }

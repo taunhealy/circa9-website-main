@@ -12,6 +12,8 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js'
 import { mergeVertices } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
 
+import { createLineGrid } from './three-line-grid.js'
+
 gsap.registerPlugin(ScrollTrigger)
 
 /*
@@ -27,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
   */
 
 // Hide console logs
-
+/*
 document.addEventListener('DOMContentLoaded', function () {
   const originalConsoleLog = console.log
   let hasLogged = false
@@ -41,6 +43,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 })
+  */
 
 // Scroll to top button
 document.addEventListener('DOMContentLoaded', function () {
@@ -59,8 +62,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // Initialize Vanta effect
 document.addEventListener('DOMContentLoaded', function () {
-  // Initialize Vanta effect
-  initHeroTopologyEffect()
+  // Initialize line grid effect
+  const cgContainer = document.querySelector('.cg_container')
+  if (cgContainer) {
+    try {
+      const { animate } = createLineGrid(cgContainer)
+      animate()
+    } catch (error) {
+      console.error('Error initializing line grid effect:', error)
+      cgContainer.style.backgroundColor = '#000'
+    }
+  }
 
   // Initialize other effects
   initInteractiveParticles()
@@ -150,56 +162,49 @@ document.addEventListener('DOMContentLoaded', function () {
   setActiveButton(customButton, themesButton)
 
   // Set the CSS variable
-  document.documentElement.style.setProperty('--brand-secondary', '#2800dc')
+  document.documentElement.style.setProperty('--brand-secondary', '#ffffff')
 
   // Add smooth scrolling for navigation links
   setupSmoothScrolling()
 
   // Add the blog card read-more effect
   setupBlogCardReadMoreEffect()
+
+  // Add ScrollTrigger for footer section
+  ScrollTrigger.create({
+    trigger: '.footer',
+    start: 'top center',
+    end: 'bottom center',
+    onEnter: () => {
+      const footerContactText = document.querySelector('.footer_contact_text')
+      if (footerContactText) {
+        console.log('footer scrolled into view')
+        gsap.to(footerContactText, {
+          color: 'blue',
+          duration: 1,
+        })
+      }
+    },
+    onLeaveBack: () => {
+      const footerContactText = document.querySelector('.footer_contact_text')
+      if (footerContactText) {
+        gsap.to(footerContactText, {
+          color: 'red',
+          duration: 1,
+        })
+      }
+    },
+  })
 })
 
 // Animations
-
-// Vanta effect Topology
-function initHeroTopologyEffect() {
-  const cgContainer = document.querySelector('.cg_container')
-  if (!cgContainer) return
-
-  if (typeof VANTA === 'undefined' || typeof VANTA.TOPOLOGY !== 'function')
-    return
-
-  window.addEventListener('load', () => {
-    setTimeout(() => {
-      try {
-        window.vantaEffect = VANTA.TOPOLOGY({
-          el: cgContainer,
-          mouseControls: false,
-          touchControls: false,
-          gyroControls: false,
-          minHeight: 200.0,
-          minWidth: 200.0,
-          scale: 1.0,
-          scaleMobile: 1.0,
-          color: 0x4838ff,
-          backgroundColor: 0x0,
-          points: 10,
-          maxDistance: 20.0,
-          spacing: 15.0,
-          showDots: false,
-        })
-      } catch (error) {
-        cgContainer.style.backgroundColor = '#000'
-      }
-    }, 300) // Reduced from 700 to 300 milliseconds
-  })
-}
 
 // Interactive Particles
 function initInteractiveParticles() {
   const fxContainer = document.querySelector('.fx_container')
   if (!fxContainer) return
 
+  // Add event listeners only if fxContainer exists
   const { scene, camera, renderer, particles, raycaster, pointer } =
     initThreeScene(fxContainer)
 
@@ -476,6 +481,7 @@ function setupWorkSectionAnimations() {
 
 // Make sure to call the function after the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', setupHoverAnimations)
+// Call this function separately for work section animations
 
 function fadeInWebsite() {
   const mainPage = document.querySelector('.page_main')
@@ -517,6 +523,13 @@ function setupSmoothScrolling() {
         if (navId === 'nav_contact') {
           const contactMessage = document.getElementById('nav_contact_message')
           const emailAddress = document.querySelector('.email-address')
+          const footer = document.querySelector('.footer')
+          const footerContactText = document.querySelector(
+            'footer_contact_text'
+          )
+          if (footer) {
+            footer.scrollIntoView({ behavior: 'smooth' })
+          }
 
           if (contactMessage && emailAddress) {
             navigator.clipboard
@@ -599,7 +612,6 @@ function initGlowingSphere() {
           if(t<0.)return -1.+pow(1.+t,2.);
           else return 1.-pow(1.-t,2.);
       }
-
       void mainImage( out vec4 fragColor, in vec2 fragCoord )
       {
         vec2 uv = (fragCoord*2.-iResolution.xy)/iResolution.y;
@@ -678,6 +690,7 @@ function setupBlogCardReadMoreEffect() {
     }
 
     function animateText(forward = true) {
+      console.log(animateText)
       clearInterval(interval)
       let iteration = forward ? 0 : 5
       const maxIterations = 5
@@ -764,7 +777,7 @@ function createNeonGlowEffect(element) {
     square.scale.set(pulseScale * bounceScale, pulseScale * bounceScale, 1) // Scale for pulsing and bouncing effect
 
     // Update square color to brand secondary
-    const brandSecondaryColor = new THREE.Color('#2800dc') // Your brand secondary color
+    const brandSecondaryColor = new THREE.Color('#ffffff') // Your brand secondary color
     material.color.lerp(brandSecondaryColor, 0.1) // Smooth transition to brand color
   }
   animate()
