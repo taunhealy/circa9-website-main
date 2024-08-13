@@ -45,6 +45,29 @@ document.addEventListener('DOMContentLoaded', function () {
 })
   */
 
+window.onload = function () {
+  // Fade in the body once the page is fully loaded
+  document.body.style.opacity = '1'
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  const tl = gsap.timeline()
+  const heroSubtitle = document.getElementById('heroSubtitle')
+  const heroTitle = document.getElementById('heroTitle')
+
+  // Page load animation for heroSubtitle and heroTitle
+  tl.from([heroSubtitle], {
+    duration: 0.3,
+    opacity: 0,
+    y: 100,
+    ease: 'power4.out',
+    skewY: 5,
+    stagger: {
+      amount: 0.3,
+    },
+  })
+})
+
 // Scroll to top button
 document.addEventListener('DOMContentLoaded', function () {
   const footerScroll = document.querySelector('.footer_scroll')

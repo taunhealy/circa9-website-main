@@ -3,6 +3,11 @@
   --brand-secondary: #5000d1 !important;
 }
 
+body {
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
 // Media Queries
 
 @media screen and (max-width: 991px) {
